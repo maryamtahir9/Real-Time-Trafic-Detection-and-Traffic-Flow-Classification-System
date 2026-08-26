@@ -80,9 +80,9 @@ export function VideoProcessor({ analyzer }: { analyzer: TrafficAnalyzer }) {
       // Step 4: Draw boxes
       if (boxes && boxes.length > 0) {
         analyzer.drawPolygons(ctx, canvas.width, canvas.height);
-        analyzer.drawResults(ctx, boxes, canvas.width, canvas.height);
+        analyzer.drawResults(ctx, boxes, canvas.width);
       } else {
-        analyzer.drawResults(ctx, [], canvas.width, canvas.height);
+        analyzer.drawResults(ctx, [], canvas.width);
       }
       
       // Step 4.5: Draw to main canvas so the user can see the progress live!

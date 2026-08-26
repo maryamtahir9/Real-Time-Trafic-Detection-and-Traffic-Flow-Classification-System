@@ -8,6 +8,7 @@ export function WebcamStream({ analyzer }: { analyzer: TrafficAnalyzer }) {
   const [streamActive, setStreamActive] = useState(false);
   const animationRef = useRef<number | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const isProcessingRef = useRef(false);
 
   const startWebcam = async () => {
     try {
@@ -19,8 +20,8 @@ export function WebcamStream({ analyzer }: { analyzer: TrafficAnalyzer }) {
       if (video) {
         video.srcObject = stream;
         streamRef.current = stream;
-        video.play();
         setStreamActive(true);
+        video.play();
       }
     } catch (err) {
       console.error("Error accessing webcam:", err);
@@ -37,6 +38,7 @@ export function WebcamStream({ analyzer }: { analyzer: TrafficAnalyzer }) {
       videoRef.current.srcObject = null;
     }
     setStreamActive(false);
+    isProcessingRef.current = false;
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
     }
@@ -45,7 +47,8 @@ export function WebcamStream({ analyzer }: { analyzer: TrafficAnalyzer }) {
   const processFrame = async () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    if (!video || !canvas || video.paused || video.ended) {
+    if (!video || !canvas || video.paused || video.ended || !isProcessingRef.current) {
+      // Loop ends or video is paused, do nothing.
       return;
     }
 
@@ -56,16 +59,24 @@ export function WebcamStream({ analyzer }: { analyzer: TrafficAnalyzer }) {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     // Run inference on the frame
-    const boxes = await analyzer.runInference(ctx, canvas.width, canvas.height);
-    
-    // Draw results
-    if (boxes) {
-      analyzer.drawPolygons(ctx, canvas.width, canvas.height);
-      analyzer.drawResults(ctx, boxes, canvas.width, canvas.height);
+    try {
+      const boxes = await analyzer.runInference(ctx, canvas.width, canvas.height);
+      
+      // Draw results
+      if (boxes && boxes.length > 0) {
+        analyzer.drawPolygons(ctx, canvas.width, canvas.height);
+        analyzer.drawResults(ctx, boxes, canvas.width);
+      } else {
+        analyzer.drawResults(ctx, [], canvas.width);
+      }
+    } catch (err) {
+      console.error("Webcam Inference Error:", err);
     }
 
-    // Schedule next frame
-    animationRef.current = requestAnimationFrame(processFrame);
+    // Schedule next frame only if still active
+    if (isProcessingRef.current) {
+      animationRef.current = requestAnimationFrame(processFrame);
+    }
   };
 
   const handleLoadedMetadata = () => {
@@ -75,7 +86,13 @@ export function WebcamStream({ analyzer }: { analyzer: TrafficAnalyzer }) {
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    processFrame();
+  };
+
+  const handlePlay = () => {
+    if (!isProcessingRef.current) {
+      isProcessingRef.current = true;
+      processFrame();
+    }
   };
 
   useEffect(() => {
@@ -91,38 +108,39 @@ export function WebcamStream({ analyzer }: { analyzer: TrafficAnalyzer }) {
         Stream video directly from your webcam. The YOLO model will analyze the feed in real-time, detecting traffic and flow intensity.
       </p>
 
-      {!streamActive ? (
-        <div style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          height: '300px', border: '1px solid var(--glass-border)', borderRadius: '12px',
-          background: 'var(--glass-bg)'
-        }}>
-          <Camera size={48} color="#10b981" style={{ marginBottom: '16px' }} />
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Ready to capture live traffic footage</p>
-          <button className="btn-primary" onClick={startWebcam} style={{ background: '#10b981' }}>
-            Enable Webcam
+      {/* Start Button Overlay */}
+      <div style={{
+        display: !streamActive ? 'flex' : 'none', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        height: '300px', border: '1px solid var(--glass-border)', borderRadius: '12px',
+        background: 'var(--glass-bg)'
+      }}>
+        <Camera size={48} color="#10b981" style={{ marginBottom: '16px' }} />
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Ready to capture live traffic footage</p>
+        <button className="btn-primary" onClick={startWebcam} style={{ background: '#10b981' }}>
+          Enable Webcam
+        </button>
+      </div>
+
+      {/* Stream Viewer */}
+      <div style={{ display: streamActive ? 'flex' : 'none', flexDirection: 'column', gap: '16px' }}>
+        <div className="canvas-wrapper">
+          <video 
+            ref={videoRef} 
+            style={{ display: 'none' }} 
+            onLoadedMetadata={handleLoadedMetadata}
+            onPlay={handlePlay}
+            playsInline
+            muted
+          />
+          <canvas ref={canvasRef} style={{ position: 'relative', width: '100%', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'block', backgroundColor: '#000' }}></canvas>
+        </div>
+        
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <button className="btn-primary" onClick={stopWebcam} style={{ background: '#ef4444' }}>
+            <StopCircle size={20} /> Stop Stream
           </button>
         </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div className="canvas-wrapper">
-            <video 
-              ref={videoRef} 
-              style={{ display: 'none' }} 
-              onLoadedMetadata={handleLoadedMetadata}
-              playsInline
-            />
-            {/* The canvas displays both the webcam frame and the overlays */}
-            <canvas ref={canvasRef} style={{ position: 'relative', width: '100%', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'block', backgroundColor: '#000' }}></canvas>
-          </div>
-          
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <button className="btn-primary" onClick={stopWebcam} style={{ background: '#ef4444' }}>
-              <StopCircle size={20} /> Stop Stream
-            </button>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

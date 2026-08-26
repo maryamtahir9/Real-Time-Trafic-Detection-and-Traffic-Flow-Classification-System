@@ -41,7 +41,7 @@ export function ImageUploader({ analyzer }: { analyzer: TrafficAnalyzer }) {
     // Draw polygons and results
     if (boxes) {
       analyzer.drawPolygons(ctx, canvas.width, canvas.height);
-      analyzer.drawResults(ctx, boxes, canvas.width, canvas.height);
+      analyzer.drawResults(ctx, boxes, canvas.width);
     }
     
     setProcessing(false);

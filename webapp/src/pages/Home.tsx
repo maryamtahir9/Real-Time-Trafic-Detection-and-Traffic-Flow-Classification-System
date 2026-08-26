@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Video, Camera, Zap, BarChart } from 'lucide-react';
+import { ArrowRight, Video, Camera, Zap } from 'lucide-react';
 
 export function Home() {
   return (

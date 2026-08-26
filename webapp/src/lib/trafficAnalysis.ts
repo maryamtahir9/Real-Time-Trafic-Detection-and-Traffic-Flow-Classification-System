@@ -222,7 +222,7 @@ export class TrafficAnalyzer {
     drawPoly(this.vertices2, 'rgba(255, 0, 0, 0.7)');
   }
 
-  drawResults(ctx: CanvasRenderingContext2D, boxes: Box[], width: number, height: number) {
+  drawResults(ctx: CanvasRenderingContext2D, boxes: Box[], width: number) {
     if (boxes.length === 0) {
       ctx.font = '24px Outfit';
       ctx.fillStyle = 'rgba(255, 0, 0, 0.8)';
