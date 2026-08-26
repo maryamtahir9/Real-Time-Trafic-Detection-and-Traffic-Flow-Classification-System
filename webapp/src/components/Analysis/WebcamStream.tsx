@@ -113,7 +113,7 @@ export function WebcamStream({ analyzer }: { analyzer: TrafficAnalyzer }) {
               playsInline
             />
             {/* The canvas displays both the webcam frame and the overlays */}
-            <canvas ref={canvasRef} style={{ width: '100%', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'block' }}></canvas>
+            <canvas ref={canvasRef} style={{ position: 'relative', width: '100%', borderRadius: '12px', border: '1px solid var(--glass-border)', display: 'block', backgroundColor: '#000' }}></canvas>
           </div>
           
           <div style={{ display: 'flex', justifyContent: 'center' }}>
