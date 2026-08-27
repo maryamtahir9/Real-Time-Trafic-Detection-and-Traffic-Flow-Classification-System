@@ -14,7 +14,7 @@ export function Home() {
           YOLOv8 Edge Inference Powered
         </div>
         
-        <h1 style={{ fontSize: '4.5rem', marginBottom: '24px', letterSpacing: '-0.02em' }}>
+        <h1 className="home-title" style={{ marginBottom: '24px', letterSpacing: '-0.02em' }}>
           Real-Time <br />
           <span className="text-gradient">Traffic & Crowd Flow</span>
           <br />Analysis.
@@ -24,7 +24,7 @@ export function Home() {
           A state-of-the-art computer vision system that runs entirely in your browser. Upload images, stream videos, or use your webcam for zero-latency traffic detection and lane density classification.
         </p>
 
-        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginBottom: '80px' }}>
+        <div className="hero-buttons">
           <Link to="/analysis">
             <button className="btn-primary" style={{ padding: '16px 32px', fontSize: '1.1rem' }}>
               Launch Workspace <ArrowRight size={20} />
@@ -38,7 +38,7 @@ export function Home() {
         </div>
 
         {/* Feature Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', textAlign: 'left' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', textAlign: 'left' }}>
           
           <div className="glass-card" style={{ padding: '32px' }}>
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(59, 130, 246, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>

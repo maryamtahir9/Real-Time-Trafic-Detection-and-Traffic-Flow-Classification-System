@@ -10,7 +10,7 @@ function App() {
       <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         {/* Premium Header */}
         <header style={{ padding: '24px 0', position: 'sticky', top: 0, zIndex: 100, backdropFilter: 'blur(10px)', borderBottom: '1px solid var(--glass-border)' }}>
-          <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="container header-container">
             <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{ background: 'var(--accent-gradient)', padding: '8px', borderRadius: '12px' }}>
                 <Activity color="white" size={24} />
@@ -18,7 +18,7 @@ function App() {
               <h2 className="text-gradient" style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>CrowdSight</h2>
             </Link>
             
-            <nav style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+            <nav className="header-nav">
               <Link to="/overview" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500, transition: 'var(--transition)' }}>Overview</Link>
               <Link to="/analysis">
                 <button className="btn-primary">

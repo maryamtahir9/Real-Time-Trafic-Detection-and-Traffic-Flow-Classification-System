@@ -9,8 +9,8 @@ export function Overview() {
 
       <div className="container">
         {/* Website Overview & How It Works */}
-        <div style={{ textAlign: 'left', background: 'var(--glass-bg)', padding: '48px', borderRadius: '24px', border: '1px solid var(--glass-border)', backdropFilter: 'blur(12px)' }}>
-          <h2 style={{ fontSize: '2.5rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="overview-content" style={{ textAlign: 'left', background: 'var(--glass-bg)', borderRadius: '24px', border: '1px solid var(--glass-border)', backdropFilter: 'blur(12px)' }}>
+          <h2 className="overview-title" style={{ fontSize: '2.5rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <BarChart color="var(--accent-primary)" size={32} />
             Website Overview & How It Works
           </h2>

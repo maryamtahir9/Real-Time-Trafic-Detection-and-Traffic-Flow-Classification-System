@@ -20,7 +20,7 @@ export function Analysis() {
 
   return (
     <div className="container" style={{ paddingTop: '40px', paddingBottom: '80px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '32px' }}>
+      <div className="analysis-header" style={{ marginBottom: '32px' }}>
         <div>
           <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Analysis Workspace</h1>
           <p style={{ color: 'var(--text-secondary)' }}>Select an input method to run the traffic flow model.</p>
@@ -33,7 +33,7 @@ export function Analysis() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
+      <div className="analysis-tabs">
         <TabButton active={activeTab === 'image'} onClick={() => setActiveTab('image')} icon={<Camera size={20} />} label="Image Upload" />
         <TabButton active={activeTab === 'video'} onClick={() => setActiveTab('video')} icon={<Video size={20} />} label="Video Upload" />
         <TabButton active={activeTab === 'webcam'} onClick={() => setActiveTab('webcam')} icon={<Zap size={20} />} label="Live Webcam" />
